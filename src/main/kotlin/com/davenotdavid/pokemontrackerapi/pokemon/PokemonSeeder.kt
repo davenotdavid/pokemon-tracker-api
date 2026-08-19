@@ -3,6 +3,9 @@ package com.davenotdavid.pokemontrackerapi.pokemon
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 
+/**
+ * TODO: replace with actual SQL and a schema/data versioned migration tool when ready
+ */
 @Component
 class PokemonSeeder(private val pokemonRepository: PokemonRepository) : CommandLineRunner {
 

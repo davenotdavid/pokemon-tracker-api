@@ -1,5 +1,6 @@
 package com.davenotdavid.pokemontrackerapi.pokemon
 
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -25,11 +26,11 @@ class PokemonController(private val pokemonService: PokemonService) {
     }
 
     @PostMapping
-    fun create(@RequestBody pokemon: Pokemon): ResponseEntity<Pokemon> =
+    fun create(@Valid @RequestBody pokemon: Pokemon): ResponseEntity<Pokemon> =
         ResponseEntity.status(HttpStatus.CREATED).body(pokemonService.create(pokemon))
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Int, @RequestBody pokemon: Pokemon): ResponseEntity<Pokemon> {
+    fun update(@PathVariable id: Int, @Valid @RequestBody pokemon: Pokemon): ResponseEntity<Pokemon> {
         val updated = pokemonService.update(id, pokemon) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(updated)
     }

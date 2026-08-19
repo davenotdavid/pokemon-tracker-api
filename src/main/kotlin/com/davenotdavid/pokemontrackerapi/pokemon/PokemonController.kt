@@ -13,36 +13,32 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/pokemon")
-class PokemonController(private val pokemonRepository: PokemonRepository) {
+class PokemonController(private val pokemonService: PokemonService) {
 
     @GetMapping
-    fun getAll(): List<Pokemon> = pokemonRepository.findAll()
+    fun getAll(): List<Pokemon> = pokemonService.getAll()
 
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Int): ResponseEntity<Pokemon> {
-        val pokemon = pokemonRepository.findById(id).orElse(null)
-            ?: return ResponseEntity.notFound().build()
+        val pokemon = pokemonService.getById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(pokemon)
     }
 
     @PostMapping
     fun create(@RequestBody pokemon: Pokemon): ResponseEntity<Pokemon> =
-        ResponseEntity.status(HttpStatus.CREATED).body(pokemonRepository.save(pokemon))
+        ResponseEntity.status(HttpStatus.CREATED).body(pokemonService.create(pokemon))
 
     @PutMapping("/{id}")
     fun update(@PathVariable id: Int, @RequestBody pokemon: Pokemon): ResponseEntity<Pokemon> {
-        if (!pokemonRepository.existsById(id)) {
-            return ResponseEntity.notFound().build()
-        }
-        return ResponseEntity.ok(pokemonRepository.save(pokemon.copy(id = id)))
+        val updated = pokemonService.update(id, pokemon) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(updated)
     }
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Int): ResponseEntity<Void> {
-        if (!pokemonRepository.existsById(id)) {
+        if (!pokemonService.delete(id)) {
             return ResponseEntity.notFound().build()
         }
-        pokemonRepository.deleteById(id)
         return ResponseEntity.noContent().build()
     }
 }

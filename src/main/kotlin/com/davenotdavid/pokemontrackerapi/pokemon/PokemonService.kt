@@ -7,22 +7,22 @@ class PokemonService(private val pokemonRepository: PokemonRepository) {
 
     fun getAll(): List<Pokemon> = pokemonRepository.findAll()
 
-    fun getById(id: Int): Pokemon? = pokemonRepository.findById(id).orElse(null)
+    fun getById(id: Int): Pokemon =
+        pokemonRepository.findById(id).orElseThrow { PokemonNotFoundException(id) }
 
     fun create(pokemon: Pokemon): Pokemon = pokemonRepository.save(pokemon)
 
-    fun update(id: Int, pokemon: Pokemon): Pokemon? {
+    fun update(id: Int, pokemon: Pokemon): Pokemon {
         if (!pokemonRepository.existsById(id)) {
-            return null
+            throw PokemonNotFoundException(id)
         }
         return pokemonRepository.save(pokemon.copy(id = id))
     }
 
-    fun delete(id: Int): Boolean {
+    fun delete(id: Int) {
         if (!pokemonRepository.existsById(id)) {
-            return false
+            throw PokemonNotFoundException(id)
         }
         pokemonRepository.deleteById(id)
-        return true
     }
 }

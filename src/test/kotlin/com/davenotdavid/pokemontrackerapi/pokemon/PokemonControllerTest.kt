@@ -85,6 +85,20 @@ class PokemonControllerTest {
     }
 
     @Test
+    fun `POST pokemon returns 409 when the id already exists`() {
+        val pokemon = pikachu()
+        given(pokemonService.create(pokemon)).willThrow(PokemonAlreadyExistsException(25))
+
+        mockMvc.perform(
+            post("/pokemon")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pokemon))
+        )
+            .andExpect(status().isConflict)
+            .andExpect(jsonPath("$.status").value(409))
+    }
+
+    @Test
     fun `PUT pokemon updates and returns 200 when found`() {
         val updated = pikachu().copy(hp = 40)
         given(pokemonService.update(25, updated)).willReturn(updated)
@@ -96,6 +110,20 @@ class PokemonControllerTest {
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.hp").value(40))
+    }
+
+    @Test
+    fun `PUT pokemon returns 400 when body id does not match path id`() {
+        val mismatched = pikachu().copy(id = 26)
+        given(pokemonService.update(25, mismatched)).willThrow(PokemonIdMismatchException(25, 26))
+
+        mockMvc.perform(
+            put("/pokemon/25")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mismatched))
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.status").value(400))
     }
 
     @Test

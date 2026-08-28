@@ -51,9 +51,19 @@ class PokemonServiceTest {
     @Test
     fun `create saves and returns the pokemon`() {
         val pokemon = pikachu()
+        given(pokemonRepository.existsById(25)).willReturn(false)
         given(pokemonRepository.save(pokemon)).willReturn(pokemon)
 
         assertEquals(pokemon, pokemonService.create(pokemon))
+    }
+
+    @Test
+    fun `create throws PokemonAlreadyExistsException when the id is taken`() {
+        given(pokemonRepository.existsById(25)).willReturn(true)
+
+        assertFailsWith<PokemonAlreadyExistsException> { pokemonService.create(pikachu()) }
+
+        verify(pokemonRepository, never()).save(pikachu())
     }
 
     @Test
@@ -69,7 +79,14 @@ class PokemonServiceTest {
     fun `update throws PokemonNotFoundException when the pokemon does not exist`() {
         given(pokemonRepository.existsById(9999)).willReturn(false)
 
-        assertFailsWith<PokemonNotFoundException> { pokemonService.update(9999, pikachu()) }
+        assertFailsWith<PokemonNotFoundException> { pokemonService.update(9999, pikachu().copy(id = 9999)) }
+    }
+
+    @Test
+    fun `update throws PokemonIdMismatchException when body id does not match path id`() {
+        assertFailsWith<PokemonIdMismatchException> { pokemonService.update(25, pikachu().copy(id = 26)) }
+
+        verify(pokemonRepository, never()).save(pikachu())
     }
 
     @Test

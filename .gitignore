@@ -42,3 +42,13 @@ out/
 ### Claude Code ###
 .mcp.json
 .claude/settings.local.json
+
+### Terraform ###
+infra/*/.terraform/
+infra/*/*.tfstate
+infra/*/*.tfstate.*
+infra/*/*.tfplan
+infra/*/crash.log
+infra/*/override.tf
+infra/*/override.tf.json
+infra/*/*.auto.tfvars

@@ -1,0 +1,10 @@
+.git
+.gradle
+.kotlin
+.idea
+build/
+out/
+bin/
+infra/
+scripts/
+*.md

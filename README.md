@@ -88,6 +88,8 @@ now; only tear it down once you're done using it as a live reference.
 ### Possible next steps
 
 - Remote Terraform state (S3 + DynamoDB lock) instead of local state
-- HTTPS via an ALB + ACM cert + a custom domain (Route 53)
+- Custom domain + HTTPS: point a subdomain (e.g. `pokemon-api.davenotdavid.com`) at the Elastic IP and run Caddy
+  as a reverse proxy on the instance for automatic Let's Encrypt certs — cheaper than an ALB + ACM for a
+  single-instance setup
 - Continuous deployment: extend CI to run `build_and_push.sh` / `redeploy.sh` automatically on push to `main`
 - Multi-AZ RDS + automated backups once this is more than a demo

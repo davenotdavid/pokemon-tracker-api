@@ -1,6 +1,8 @@
 # pokemon-tracker-api
 
-A Spring Boot / Kotlin API for tracking Pokemon.
+[![CI](https://github.com/davenotdavid/pokemon-tracker-api/actions/workflows/ci.yml/badge.svg)](https://github.com/davenotdavid/pokemon-tracker-api/actions/workflows/ci.yml)
+
+A Kotlin/Spring Boot REST API for tracking captured Pokemon, deployed to AWS (EC2, RDS) with Terraform and Docker.
 
 ## Live demo
 
@@ -87,5 +89,5 @@ now; only tear it down once you're done using it as a live reference.
 
 - Remote Terraform state (S3 + DynamoDB lock) instead of local state
 - HTTPS via an ALB + ACM cert + a custom domain (Route 53)
-- GitHub Actions to run `build_and_push.sh` / `redeploy.sh` on push to `main`
+- Continuous deployment: extend CI to run `build_and_push.sh` / `redeploy.sh` automatically on push to `main`
 - Multi-AZ RDS + automated backups once this is more than a demo

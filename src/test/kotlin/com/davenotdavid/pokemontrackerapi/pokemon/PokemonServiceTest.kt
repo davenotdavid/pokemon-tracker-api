@@ -29,7 +29,7 @@ class PokemonServiceTest {
 
     @Test
     fun `getAll returns all pokemon from the repository`() {
-        given(pokemonRepository.findAll()).willReturn(listOf(pikachu()))
+        given(pokemonRepository.findAllByOrderByIdAsc()).willReturn(listOf(pikachu()))
 
         assertEquals(listOf(pikachu()), pokemonService.getAll())
     }

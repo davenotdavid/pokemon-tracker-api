@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 @Service
 class PokemonService(private val pokemonRepository: PokemonRepository) {
 
-    fun getAll(): List<Pokemon> = pokemonRepository.findAll()
+    fun getAll(): List<Pokemon> = pokemonRepository.findAllByOrderByIdAsc()
 
     fun getById(id: Int): Pokemon =
         pokemonRepository.findById(id).orElseThrow { PokemonNotFoundException(id) }

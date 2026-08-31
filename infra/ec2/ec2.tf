@@ -27,3 +27,12 @@ resource "aws_instance" "api" {
     Name = "${var.project_name}-api"
   }
 }
+
+resource "aws_eip" "api" {
+  instance = aws_instance.api.id
+  domain   = "vpc"
+
+  tags = {
+    Name = "${var.project_name}-api"
+  }
+}

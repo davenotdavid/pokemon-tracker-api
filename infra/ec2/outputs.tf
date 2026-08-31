@@ -1,6 +1,6 @@
 output "api_url" {
-  description = "Base URL of the deployed API"
-  value       = "http://${aws_instance.api.public_ip}"
+  description = "Base URL of the deployed API (stable across redeploys via the Elastic IP)"
+  value       = "http://${aws_eip.api.public_ip}"
 }
 
 output "ec2_instance_id" {

@@ -2,7 +2,8 @@
 set -euxo pipefail
 
 dnf update -y
-dnf install -y docker
+dnf install -y amazon-ssm-agent docker
+systemctl enable --now amazon-ssm-agent
 systemctl enable --now docker
 
 mkdir -p /usr/local/lib/docker/cli-plugins

@@ -11,7 +11,9 @@ A Kotlin/Spring Boot REST API for tracking captured Pokemon, deployed to AWS (EC
 - Swagger UI: http://54.209.33.157/swagger-ui/index.html
 
 Deployed on the EC2 setup described below and left running (see [Deploying to AWS](#deploying-to-aws)) rather
-than torn down between visits, so the link should work whenever you click it.
+than torn down between visits, so the link should work whenever you click it. Since it's a public demo, the
+dataset is wiped and reseeded daily at midnight UTC (see `PokemonResetJob`) — any captures/edits/deletes you make
+won't persist past that.
 
 ## Running locally
 

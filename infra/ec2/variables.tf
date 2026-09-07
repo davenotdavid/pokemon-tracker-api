@@ -39,3 +39,9 @@ variable "db_allocated_storage" {
   type        = number
   default     = 20
 }
+
+variable "domain_name" {
+  description = "Domain the API is served under; Caddy uses this to request a Let's Encrypt cert. DNS (an A record pointing this at the Elastic IP) is managed outside Terraform."
+  type        = string
+  default     = "pokemon-api.davenotdavid.com"
+}

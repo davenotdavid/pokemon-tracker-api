@@ -7,8 +7,8 @@ A Kotlin/Spring Boot REST API for tracking captured Pokemon, deployed to AWS (EC
 
 ## Live demo
 
-- API: http://54.209.33.157/pokemon
-- Swagger UI: http://54.209.33.157/swagger-ui/index.html
+- API: https://pokemon-api.davenotdavid.com/pokemon
+- Swagger UI: https://pokemon-api.davenotdavid.com/swagger-ui/index.html
 
 Deployed on the EC2 setup described below and left running (see [Deploying to AWS](#deploying-to-aws)) rather
 than torn down between visits, so the link should work whenever you click it. Since it's a public demo, the
@@ -38,9 +38,15 @@ coexist without colliding. This one, [`infra/ec2/`](infra/ec2), is deliberately 
   instance at deploy time via its IAM role — never embedded in code or committed anywhere.
 - An **Elastic IP** keeps the public address stable across redeploys/instance replacement, so the link above
   doesn't break.
+- **Caddy** runs alongside the API container as a reverse proxy, terminating HTTPS with an automatic Let's Encrypt
+  cert for the domain below.
 
-This is intentionally not a "real" production setup (single instance, no HTTPS/custom domain, no autoscaling, no
-remote Terraform state) — see [Possible next steps](#possible-next-steps).
+`pokemon-api.davenotdavid.com` is DNS-hosted outside AWS (cPanel), so it isn't managed by Terraform — its A record
+just points at the `elastic_ip` output above and needs to be updated by hand if that IP ever changes (e.g. if the
+instance is recreated without the Elastic IP attached, which shouldn't normally happen).
+
+This is intentionally not a "real" production setup (single instance, no autoscaling, no remote Terraform state) —
+see [Possible next steps](#possible-next-steps).
 
 ### Prerequisites
 
@@ -91,9 +97,6 @@ now; only tear it down once you're done using it as a live reference.
 ### Possible next steps
 
 - Remote Terraform state (S3 + DynamoDB lock) instead of local state
-- Custom domain + HTTPS: point a subdomain (e.g. `pokemon-api.davenotdavid.com`) at the Elastic IP and run Caddy
-  as a reverse proxy on the instance for automatic Let's Encrypt certs — cheaper than an ALB + ACM for a
-  single-instance setup
 - Continuous deployment: extend CI to run `build_and_push.sh` / `redeploy.sh` automatically on push to `main`
 - Multi-AZ RDS + automated backups once this is more than a demo
 

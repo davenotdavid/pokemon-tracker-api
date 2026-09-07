@@ -11,7 +11,7 @@ resource "aws_instance" "api" {
   associate_public_ip_address = true
 
   root_block_device {
-    volume_size = 20
+    volume_size = 30
     volume_type = "gp3"
   }
 
@@ -23,6 +23,7 @@ resource "aws_instance" "api" {
     db_name            = var.db_name
     db_username        = var.db_username
     ssm_param_name     = aws_ssm_parameter.db_password.name
+    domain_name        = var.domain_name
   })
 
   # Bump this to force a new user_data run (e.g. after changing the template).

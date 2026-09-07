@@ -23,17 +23,37 @@ DB_PASSWORD=$(aws ssm get-parameter --name "${ssm_param_name}" --with-decryption
 aws ecr get-login-password --region "${aws_region}" \
   | docker login --username AWS --password-stdin "${ecr_registry}"
 
+cat > /opt/app/Caddyfile <<EOF
+${domain_name} {
+	reverse_proxy api:8080
+}
+EOF
+
 cat > /opt/app/docker-compose.yml <<EOF
 services:
   api:
     image: ${ecr_repository_url}:latest
     restart: always
-    ports:
-      - "80:8080"
+    expose:
+      - "8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://${db_endpoint}/${db_name}
       SPRING_DATASOURCE_USERNAME: ${db_username}
       SPRING_DATASOURCE_PASSWORD: $${DB_PASSWORD}
+
+  caddy:
+    image: caddy:2-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /opt/app/Caddyfile:/etc/caddyfile:ro
+      - caddy_data:/data
+    command: caddy run --config /etc/caddyfile
+
+volumes:
+  caddy_data:
 EOF
 
 cd /opt/app

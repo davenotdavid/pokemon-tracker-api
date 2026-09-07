@@ -1,6 +1,11 @@
 output "api_url" {
-  description = "Base URL of the deployed API (stable across redeploys via the Elastic IP)"
-  value       = "http://${aws_eip.api.public_ip}"
+  description = "Base URL of the deployed API (DNS for this must point at the Elastic IP below — see elastic_ip output)"
+  value       = "https://${var.domain_name}"
+}
+
+output "elastic_ip" {
+  description = "Public IP to point the domain's DNS A record at (managed outside Terraform)"
+  value       = aws_eip.api.public_ip
 }
 
 output "ec2_instance_id" {
